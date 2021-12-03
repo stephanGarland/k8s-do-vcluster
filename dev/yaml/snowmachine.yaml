@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: snowmachine
+  labels:
+    app: snowmachine
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: snowmachine
+  template:
+    metadata:
+      labels:
+        app: snowmachine
+    spec:
+      containers:
+      - name: snowmachine
+        image: stephangarland/snowmachine:latest
+        imagePullPolicy: Always
