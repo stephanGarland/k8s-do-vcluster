@@ -2,3 +2,4 @@
 venv/
 .terraform.lock.hcl
 .terragrunt-cache
+*kubeconfig*
