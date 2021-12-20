@@ -1,3 +1,15 @@
+enableHA: true
+
 syncer:
+  replicas: 3
   extraArgs:
   - --tls-san=nnn.nnn.nnn.nnn
+
+etcd:
+  replicas: 3
+
+controller:
+  replicas: 3
+
+api:
+  replicas: 3
