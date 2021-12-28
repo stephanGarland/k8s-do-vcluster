@@ -1,20 +1,15 @@
-# vcluster-1.yaml
+# vcluster-dev.yaml
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: vcluster-1
----
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: host-vcluster-1
-  labels:
-    app: host-vcluster-1
+  name: vcluster-dev
+  namespace: host-vcluster-1
 ---
 kind: Role
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: vcluster-1
+  name: vcluster-dev
+  namespace: host-vcluster-1
 rules:
   - apiGroups: [""]
     resources: ["configmaps", "secrets", "services", "services/proxy", "pods", "pods/proxy", "pods/attach", "pods/portforward", "pods/exec", "pods/log", "events", "endpoints", "persistentvolumeclaims"]
@@ -32,19 +27,21 @@ rules:
 kind: RoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: vcluster-1
+  name: vcluster-dev
+  namespace: host-vcluster-1
 subjects:
   - kind: ServiceAccount
-    name: vcluster-1
+    name: vcluster-dev
 roleRef:
   kind: Role
-  name: vcluster-1
+  name: vcluster-dev
   apiGroup: rbac.authorization.k8s.io
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: vcluster-1
+  name: vcluster-dev
+  namespace: host-vcluster-1
 spec:
   type: ClusterIP
   ports:
@@ -53,12 +50,13 @@ spec:
       targetPort: 8443
       protocol: TCP
   selector:
-    app: vcluster-1
+    app: vcluster-dev
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: vcluster-1-headless
+  name: vcluster-dev-headless
+  namespace: host-vcluster-1
 spec:
   ports:
     - name: https
@@ -67,30 +65,31 @@ spec:
       protocol: TCP
   clusterIP: None
   selector:
-    app: vcluster-1
+    app: vcluster-dev
 ---
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: vcluster-1
+  name: vcluster-dev
+  namespace: host-vcluster-1
   labels:
-    app: vcluster-1
+    app: vcluster-dev
 spec:
-  serviceName: vcluster-1-headless
+  serviceName: vcluster-dev-headless
   replicas: 1
   selector:
     matchLabels:
-      app: vcluster-1
+      app: vcluster-dev
   template:
     metadata:
       labels:
-        app: vcluster-1
+        app: vcluster-dev
     spec:
       terminationGracePeriodSeconds: 10
-      serviceAccountName: vcluster-1
+      serviceAccountName: vcluster-dev
       containers:
-      - image: rancher/k3s:v1.21.7-k3s1
-        name: virtual-cluster
+      - image: rancher/k3s:v1.21.5+k3s2
+        name: vcluster-dev-0
         command:
           - "/bin/k3s"
         args:
@@ -109,18 +108,21 @@ spec:
           - mountPath: /data
             name: data
       - name: syncer
-        image: "loftsh/vcluster:0.4.5"
+        image: "loftsh/vcluster:0.5.0-beta.0"
         args:
-          - --service-name=vcluster-1
-          - --suffix=vcluster-1
-          - --owning-statefulset=vcluster-1
-          - --out-kube-config-secret=vcluster-1
+          - --service-name=vcluster-dev
+          - --suffix=vcluster-dev
+          - --owning-statefulset=vcluster-dev
+          - --out-kube-config-secret=vcluster-dev
+          - --name=vcluster-dev
+          - --tls-san=157.230.65.136
         volumeMounts:
           - mountPath: /data
             name: data
   volumeClaimTemplates:
     - metadata:
         name: data
+        namespace: host-vcluster-1
       spec:
         accessModes: [ "ReadWriteOnce" ]
         resources:

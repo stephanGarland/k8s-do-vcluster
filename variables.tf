@@ -18,7 +18,7 @@ variable env {
 variable k8s_version {
     description = "The version of Kubernetes to use."
     type        = string
-    default     = "1.21.5-do.0"
+    default     = "1.20.11-do.0"
 }
 
 variable node_count {

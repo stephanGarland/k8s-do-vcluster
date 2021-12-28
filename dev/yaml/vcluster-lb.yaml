@@ -6,7 +6,8 @@ metadata:
   namespace: host-vcluster-1
 spec:
   selector:
-    app: vcluster-1
+    app: vcluster
+    release: vcluster-dev
   ports:
     - name: https
       port: 443
