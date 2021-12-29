@@ -53,7 +53,7 @@ resource "digitalocean_kubernetes_cluster" "k8s_cluster" {
         tags       = local.worker_tags
     }
 }
-
+/*
 resource "digitalocean_loadbalancer" "vcluster" {
     name = "${local.cluster_name}-lb"
     region = var.region
@@ -76,7 +76,7 @@ resource "digitalocean_loadbalancer" "vcluster" {
         unhealthy_threshold      = 3
     }
 }
-
+*/
 output "cluster-id" {
     value = digitalocean_kubernetes_cluster.k8s_cluster.id
 }
