@@ -4,6 +4,10 @@ For DigitalOcean's K8s challenge, I chose to install [vcluster](https://www.vclu
 
 _Insert Xzibit meme here._
 
+# Video link
+
+If you'd like to watch me do this, [here's a link](https://youtu.be/XKuAwyEJDyQ). Be ye warned, I have neither video editing software nor skills.
+
 # HOWTO
 
 ## Prerequisites
