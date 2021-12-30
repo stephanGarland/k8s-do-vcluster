@@ -396,7 +396,7 @@ digitalocean_kubernetes_cluster.k8s_cluster: Destruction complete after 1s
 Destroy complete! Resources: 1 destroyed.
 ```
 
-Don't forget to manually clean up anything created with `kubectl`, like the Load Balancer. Also, of course, it is possible to instantiate it with Terra{form,grunt} if you'd rather do it that way.
+Don't forget to manually clean up anything created with `kubectl`, like the Load Balancer. Alternately, if you delete the vcluster's namesapce first, everything in it (like the Load Balancer) goes away. Also, of course, it is possible to instantiate it with Terra{form,grunt} if you'd rather do it that way.
 
 # Conclusion
 
