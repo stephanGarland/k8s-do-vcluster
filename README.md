@@ -54,6 +54,54 @@ env = "dev"
 # Resource instantiation for all environments
 ```
 
+Since I'm using DOKS (Digital Ocean Kubernetes), the Terraform for it is fairly straightforward - this will do:
+
+```
+resource "digitalocean_kubernetes_cluster" "k8s_cluster" {
+    name    = local.cluster_name
+    region  = var.region
+    version = var.k8s_version
+    tags    = local.cluster_tags
+
+    node_pool {
+        name       = local.pool_name
+        size       = var.cluster_size
+        auto_scale = var.auto_scale
+        node_count = var.node_count
+        tags       = local.worker_tags
+    }
+}
+```
+
+Substituting in the values yields this:
+
+```
+resource "digitalocean_kubernetes_cluster" "k8s_cluster" {
+    name    = "sgarland-dev-cluster"
+    region  = "nyc1"
+    version = "1.20.11-do.0"
+    tags    = [
+       "sgarland-dev-cluster",
+       "v1.20.11-do.0",
+       "nyc1",
+    ]
+
+    node_pool {
+        name       =  "sgarland-dev-cluster-pool"
+        size       = "s-2vcpu-4gb"
+        auto_scale = false
+        node_count = 3
+        tags       = [
+            "sgarland-dev-cluster-worker",
+            "v1.20.11-do.0",
+            "nyc1",
+            "k8s:worker",
+        ]
+    }
+}
+```
+
+
 ### Apply
 
 Then, when I want to apply, I run `terragrunt apply` from within `dev` or `prod`, and whatever changes I've made locally with its `tfvars` file are applied. You do have to be a bit creative with some variables, but judicious use of `locals` usually fixes that.
